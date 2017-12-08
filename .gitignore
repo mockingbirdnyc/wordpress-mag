@@ -19,7 +19,9 @@ wp-content/plugins/hello.php
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
+!.elasticbeanstalk/*.config.yml
 
 # intellij
 **/.idea/workspace.xml
 **/.idea/tasks.xml
+**/.idea/vcs.xml
