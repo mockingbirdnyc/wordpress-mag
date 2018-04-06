@@ -5,6 +5,11 @@
  * Date: 12/8/17
  * Time: 12:11 PM
  */
+
+@ini_set( 'upload_max_size' , '12M' );
+@ini_set( 'post_max_size' , '13M' );
+@ini_set( 'memory_limit' , '15M' );
+
 /**
  * The base configurations of the WordPress.
  *
