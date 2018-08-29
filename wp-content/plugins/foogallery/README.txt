@@ -1,28 +1,38 @@
-=== Foo Gallery ===
-Contributors: bradvin, fooplugins
+=== FooGallery - Image Gallery WordPress Plugin ===
+Contributors: bradvin, steveush, fooplugins, freemius
 Donate link: http://fooplugins.com
 Tags: gallery, image gallery, photo gallery, responsive, album, media gallery, masonry gallery, portfolio, justified image gallery, video gallery, photography, photographer, retina
 Requires at least: 3.9
-Tested up to: 4.7
+Tested up to: 4.9.6
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Foo Gallery is the most intuitive and extensible gallery management tool ever created for WordPress.
+Why choose FooGallery? Stunning gallery layouts, responsive, retina-ready, lightning fast, easy to use.
 
 == Description ==
 
-Foo Gallery allows for better image and video gallery management within WordPress. Built to be simple for users and highly flexible for developers.
+Why choose FooGallery? Stunning gallery layouts, responsive, retina-ready, lightning fast, easy to use. Built to be highly configurable and extensible for developers or freelancers.
 
-[View the Foo Gallery Homepage & DEMO](http://foo.gallery/)
+[View the FooGallery Homepage & DEMO](http://foo.gallery/)
+
+**GDPR**
+
+When you install FooGallery for the first time, the plugin asks you (the website admin) to opt-in so that we can track your usage of the plugin and provide a better service (send you update emails for new version releases and security updates etc). *This is optional and not required in order to use the plugin.*
+
+From your website point of view, FooGallery never collects or stores any visitor information at all, when someone visits your website.
+
+**PHP 7 Compatible**
+
+FooGallery has been tried and tested on servers running PHP 7.
 
 **Retina Support**
 
-Foo Gallery now comes with built-in support for higher quality thumbnails on retina-enabled displays. No more blurry thumbnails, just crisp thumbnails that look amazing on all devices.
+FooGallery now comes with built-in support for higher quality thumbnails on retina-enabled displays. No more blurry thumbnails, just crisp thumbnails that look amazing on all devices.
 
 **Video Support**
 
-Foo Gallery now supports the creation of video galleries with the [FooVideo premium extension](http://fooplugins.com/plugins/foovideo/?utm_source=foogalleryplugin&utm_medium=foogallerylink&utm_campaign=foogallery_wprepo)! Create galleries with both images and videos mixed!
+FooGallery now supports the creation of video galleries with the [FooVideo premium extension](http://fooplugins.com/plugins/foovideo/?utm_source=foogalleryplugin&utm_medium=foogallerylink&utm_campaign=foogallery_wprepo)! Create galleries with both images and videos mixed!
 
 **Albums Built In**
 
@@ -30,49 +40,52 @@ Albums are now built in as an extension. Simply head over to the extensions page
 
 **Built For Developers**
 
-Foo Gallery was designed to be the most developer-friendly gallery plugin available for WordPress. It was also built on top of a solid extension framework, which means different functionality is separated out into different areas in the codebase. It also means the core plugin is lightweight, but still allowing for the most flexibility.
+FooGallery was designed to be the most developer-friendly gallery plugin available for WordPress. It was also built on top of a solid extension framework, which means different functionality is separated out into different areas in the codebase. It also means the core plugin is lightweight, but still allowing for the most flexibility.
 
 **Features**
 
-*   Retina thumbnail support
-*   Add videos to galleries (via the [FooVideo premium extension](http://fooplugins.com/plugins/foovideo/?utm_source=foogalleryplugin&utm_medium=foogallerylink&utm_campaign=foogallery_wprepo))
+*	Lazy loading
+*	Simple Pagination (dots)
+*	Live previews in admin
+*	Retina thumbnail support
+*	Gallery Widget
+*	Add videos to galleries (via the [FooVideo premium extension](http://fooplugins.com/plugins/foovideo/?utm_source=foogalleryplugin&utm_medium=foogallerylink&utm_campaign=foogallery_wprepo))
 *	Albums built-in! (Activate the albums extension)
-*	Gallery custom post type
 *	Use built-in media library to manage images
 *	Drag n Drop reordering of images and galleries
-*	Built-in gallery templates
-*	Built-in support for FooBox
-*	Built-in Extensions Store
-*	Built on an extension framework
+*	Beautiful gallery templates
 *	Custom CSS for both galleries and albums
 *	Copy to clipboard shortcodes
 *	Visual shortcodes in rich text editor
-*	Gallery picker to insert shortcode
+*	Gallery picker to insert shortcodes
 *	Page usage metabox with one-click gallery page creation
-*	NextGen importer tool (albums and galleries)
+*	NextGen importer tool (albums and galleries and shortcodes)
 *	Multisite Support
+*	PHP 7 compatible
 *	plus many, many more
 
-**Gallery Demos**
+**PRO Features**
+
+*   11 Beautiful Hover Effect Presets
+*	Media Tags and Categories
+*	Gallery Filtering using Media Tags or Categories
+*   Polaroid PRO Gallery Template
+*   Grid PRO Gallery Template
+*   Advanced Pagination
+*   Infinite Scroll
+*   Multiple Loaded Effects
+*   Bulk Copy Gallery Settings
+*   More on the way!
+
+**Demos**
 
 *	Responsive Image Gallery - [demo](http://foo.gallery/demos/responsive-image-gallery/)
-*	FooGrid Image Gallery - [light demo](http://foo.gallery/demos/foogrid-light/) - [dark demo](http://foo.gallery/demos/foogrid-dark/)
 *	Image Viewer Gallery - [light demo](http://foo.gallery/demos/image-viewer-gallery/) - [dark demo](http://foo.gallery/demos/image-viewer-gallery-dark/)
 *	Masonry Gallery - [demo](http://foo.gallery/demos/masonry-image-gallery/)
 *	Simple Portfolio - [demo](http://foo.gallery/demos/simple-portfolio/)
-*	Justified Gallery ([http://miromannino.github.io/Justified-Gallery](http://miromannino.github.io/Justified-Gallery/)) - [demo](http://foo.gallery/demos/justified-gallery/)
+*	Justified Gallery - [demo](http://foo.gallery/demos/justified-gallery/)
 *	Single Thumbnail Gallery - [demo](http://foo.gallery/demos/single-thumbnail-gallery/)
-*	Polaroid Gallery - [demo](http://foo.gallery/demos/polaroid-image-gallery/)
-*	Cube Gallery - [demo](http://foo.gallery/demos/cube-gallery/) - [Buy Now!](http://fooplugins.com/plugins/cube-gallery-template/?utm_source=foogalleryplugin&utm_medium=foogallerylink&utm_campaign=foogallery_wprepo)
-*	Mixed (Images + Videos) - [demo](http://foo.gallery/demos/mixed/)
-
-**Caption Demos**
-
-*	Simple Hover Captions - [demo](http://foo.gallery/demos/captions-simple-hover/)
-*	Always Visible Captions - [demo](http://foo.gallery/demos/responsive-image-gallery-captions/)
-*	Drop Captions - [demo](http://foo.gallery/demos/captions-drop/)
-*	Fade Captions - [demo](http://foo.gallery/demos/captions-fade/)
-*	Push Captions - [demo](http://foo.gallery/demos/captions-push/)
+*	[More Demos](http://foo.gallery/demos)
 
 **Album Demos**
 
@@ -86,20 +99,13 @@ Foo Gallery was designed to be the most developer-friendly gallery plugin availa
 
 **Extensions**
 
-*   [FooVideo](http://fooplugins.com/plugins/foovideo/?utm_source=foogalleryplugin&utm_medium=foogallerylink&utm_campaign=foogallery_wprepo)
+*	[FooVideo](http://fooplugins.com/plugins/foovideo/?utm_source=foogalleryplugin&utm_medium=foogallerylink&utm_campaign=foogallery_wprepo)
 *	Albums (bundled)
 *	Default Gallery Templates (bundled)
 *	NextGen Gallery and Album Importer (bundled)
-*	[FooGrid Gallery](http://fooplugins.com/plugins/foogrid/?utm_source=foogalleryplugin&utm_medium=foogallerylink&utm_campaign=foogallery_wprepo)
-*	[Cube Gallery](http://fooplugins.com/plugins/cube-gallery-template/?utm_source=foogalleryplugin&utm_medium=foogallerylink&utm_campaign=foogallery_wprepo)
 *	[Custom Branding](http://fooplugins.com/plugins/foogallery-branding/?utm_source=foogalleryplugin&utm_medium=foogallerylink&utm_campaign=foogallery_wprepo)
 *	[FooBox PRO Lightbox](http://fooplugins.com/plugins/foobox/?utm_source=foogalleryplugin&utm_medium=foogallerylink&utm_campaign=foogallery_wprepo)
 *	[FooBox FREE Lightbox](http://wordpress.org/plugins/foobox-image-lightbox)
-*	[Owl Carousel Template](http://wordpress.org/plugins/foogallery-owl-carousel-template/)
-*	[ZOOM Template](http://wordpress.org/plugins/foogallery-zoom-template/)
-*	[Thirsty Affiliates](http://wordpress.org/plugins/thirstyaffiliates-for-foogallery-extension/)
-*	[Polaroid Template](https://github.com/fooplugins/foogallery-polaroid-template)
-*	[Use Media Menu](https://github.com/fooplugins/foogallery-media-menu)
 *	Build your own!!!
 
 **Documentation**
@@ -122,7 +128,7 @@ FooGallery is hosted on [GitHub](https://github.com/fooplugins/foogallery). If y
 
 = Why are my thumbnails so blurry? =
 
-Have you enabled retina support for your galleries? Displays with retina support can show better quality thumbnails when retina support is enabled. To enable retina support, edit the gallery and locate the Retina Support metabox.
+Have you enabled retina support for your galleries? To enable retina support, edit the gallery and locate the Retina Support metabox.
 
 = Can I add videos to my galleries? =
 
@@ -146,9 +152,176 @@ Hell, yes! Check out our [developer page](http://foo.gallery/developers/)
 
 == Upgrade Notice ==
 
-Update now to support FooVideo and many other improvements!
+Update now to get all the latest features, bug fixes and improvements!
 
 == Changelog ==
+
+= 1.4.31 =
+
+* New : GDPR notice in readme
+* New : Update to Freemius SDK 2.0.1
+* Fix : Default captions bug introduced in 1.4.30
+
+= 1.4.30 =
+
+* Fix : Album 404 issues when used on homepage
+* Fix : Dimension attributes missing for upscaling small images
+* Fix : Issue when galleries cannot be added to an album
+* Fix : Lightbox caption mismatch
+* New : Setting for legacy thumb cropping in Simple Portfolio gallery
+* Update : FooGallery client side 1.0.26
+
+= 1.4.29 =
+
+* New : Added an album setting to set the gallery title size (h2,h3,h4,h5,h6)
+* Fix : media modal issues with Elementor
+* Fix : media modal issues with Thrive Architect
+* Fix : caption override fix for single thumbnail galleries
+* Update : media modal improvements
+
+= 1.4.27 =
+
+* Fix : Justified gallery issues in certain browsers / devices
+* Fix : Portfolio gallery issues in certain browsers / devices
+* Fix : Use of correct rel attribute for better lightbox compatibility and W3 validation
+* Fix : Removed local translations that were incomplete and outdated
+* Update : FooGallery client side 1.0.24
+* Update : language files
+
+= 1.4.26 =
+
+* Fix : Filtering introduced an array initialization construct not working for older versions of php
+
+= 1.4.25 =
+
+* New : Retina support for albums!
+* New : Default crop position setting for attachments
+* New : Speed up gallery previews in wp-admin
+* New : Caption support for Responsive Lightbox by dFactory
+* Fix : Extension loading issues on certain installs
+* Fix : Shortcode copy-to-clipboard metabox works again
+* Fix : Bugs fixes for paging, filtering, FooBox and more
+* Fix : Ensure jquery-ui-sortable is loaded on edit page for some installs
+* Fix : All-In-One Stack Album layout bugs
+* Fix : Reworked extensions listing page logic
+* Update : FooGallery client side 1.0.23
+* Update : Freemius SDK 1.2.4
+
+= 1.4.15 =
+
+* Fix : All-In-One stack album fatal error when 2 albums on same page
+
+= 1.4.14 =
+
+* Fix : All-In-One stack album now uses the gallery featured image
+* Added more position options for Single Thumbnail Gallery
+* Added paging output setting
+* Update to latest client side JS 1.0.20
+
+= 1.4.12 =
+
+* New : NextGen importer now includes shortcode replacement
+* New : Masonry gallery supports captions below thumbnails
+* New : Performance improvements for very large galleries (1000+ images)
+* Fix : Bugs fixes for paging, FooBox and more
+* Update to latest client side JS 1.0.18
+
+= 1.4.8 =
+
+* New : added custom ready event setting for overcoming 3rd party jQuery exceptions
+* New : added crop thumbnail option to 'Single Thumbnail' and 'Image Viewer' templates
+* Update to latest client side JS
+
+= 1.4.7 =
+
+* Fix : conflicts with WP Rocket CDN features
+* Fix : conflicts with themes or plugins deferring script loading
+* New : Auto-loading of default templates
+* Update to latest client side JS
+
+= 1.4.6 =
+
+* Fix : conflicts with other scripts or plugins using data-src attributes
+* Fix : script moved back to use jQuery ready event, to avoid some conflicts
+* New : Global setting to disable lazy loading for all galleries
+* New : FooGallery Widget!
+* New : Admin notice for Autoptomize users to delete cache on updates
+* Update to latest client side JS
+
+= 1.4.5 =
+
+* Fix : Lazy loading - scrolling galleries in certain scenarios were not loading thumbs
+* Fix : Galleries that were hidden on page load were not displaying correctly when shown
+* Fix : Default gallery settings were not being applied to new galleries
+* New : shortcode arguments applied to gallery for common fields
+* New : HTML caching is disabled by default now!
+* Updated to latest client side JS and CSS
+
+= 1.4.4 =
+
+* Fix : upgrade was calling underfined function
+
+= 1.4.3 =
+
+* Fix : Justify gallery template issues
+* Fix : Masonry gallery template issues
+* Fix : Caption description not hidden when supposed to
+* Fix : Complete rework of thumbnail dimension logic!
+* Fix : Redirection bug on activation
+* Fix : Added checks for galleries causing PHP warnings
+* Fix : Multisite warnings on activation
+* New : Last Row setting in Justify gallery template
+* New : Alignment setting in Simple Portfolio gallery template
+* New : Added more checks after load to ensure gallery layout is correct
+* New : Added lazy loading advanced setting
+* Updated to Freemius SDK 1.2.2.10
+* Updated to latest client side JS and CSS
+
+= 1.3.28 =
+
+* Complete rewrite of the built-in gallery templates
+* New : lazy loading
+* New : simple pagination
+* New : Live Previews when editing a gallery
+* 260+ updates, changes and bug fixes
+
+= 1.3.8 =
+
+* New : Built in support for FooBox, fixing a lot of issues where FooBox option is not available
+* Fix : More reliable extension active status on extensions listing
+* Fix : More obvious wording for 3rd party plugins when they are not installed
+
+= 1.3.7 =
+
+* Fix : Activation redirect bug showing "Sorry, you are not allowed to access this page."
+
+= 1.3.6 =
+
+* New : Freemius integration!
+* New : Added support for the Responsive Lightbox by dFactory
+* New : New custom class field for an attachment
+* New : Added more system info for better debugging when there are server issues
+* Fix : Visual editor FooGallery edit button
+* Fix : Image Viewer hover effect none now works as expected
+* Fix : Disable HTML caching for randomly ordered galleries
+
+= 1.2.20 =
+
+* New : Force Use Original thumb setting on gallery edit page
+* Fix : PHP warning from thumbnail class since 1.2.19
+
+= 1.2.19 =
+
+* New : Gallery output caching! Saves database requests improving load time
+* New : Gallery usage column in admin gallery listing
+* New : Better support for animated gifs
+* New : Hover icons retina support
+* New : Uninstall button on settings
+* New : Save thumb dimensions per attachment. (needed in future versions)
+* Fix : Extensions refactor and many issues resolved
+* Fix : Better retina support for all templates
+* Fix : Colorize / Greyscale CSS filters
+* Fix : Even better wpthumb compatibility
 
 = 1.2.18 =
 

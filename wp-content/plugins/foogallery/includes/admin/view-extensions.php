@@ -2,7 +2,7 @@
 $instance = FooGallery_Plugin::get_instance();
 $api      = new FooGallery_Extensions_API();
 
-$extensions = $api->get_all();
+$extensions = $api->get_all_for_view();
 $has_errors = $api->has_extension_loading_errors();
 $categories = $api->get_all_categories();
 
@@ -54,7 +54,7 @@ if ( $has_errors ) { ?>
 	} ?>
 		<div class="extension-search-box">
 			<label class="screen-reader-text" for="plugin-search-input">Search Extensions:</label>
-			<input placeholder="<?php echo __( 'search...', 'foogallery' ); ?>" type="search" id="extensions-search-input">
+			<input placeholder="<?php echo __( 'Search extensions...', 'foogallery' ); ?>" type="search" id="extensions-search-input">
 		</div>
 		<div class="extension-reload">
 			<a class="ext_action button" href="<?php echo esc_url( add_query_arg( 'action', 'reload' ) ); ?>"><span class="dashicons dashicons-update"></span> <?php _e( 'Reload', 'foogallery' ); ?></a>
@@ -66,32 +66,30 @@ if ( $has_errors ) { ?>
 	<div class="extensions">
 		<?php foreach ( $extensions as $extension ) {
 			$slug = $extension['slug'];
-			$classes = 'extension all extension-' . $slug;
-			$downloaded = $api->is_downloaded( $extension );
-			if ( $downloaded ) {
-				$classes .= ' downloaded';
-			} else {
-				$classes .= ' download';
-			}
-			if ( $downloaded && $api->is_active( $slug ) ) {
-				$classes .= ' activated';
-			}
-			if ( $api->has_errors( $slug ) ) {
-				$classes .= ' has_error';
-			}
+			$classes = array('extension', 'all', 'extension-' . $slug);
+
+			$downloaded = isset( $extension['downloaded'] ) && true === $extension['downloaded'];
+			$is_active = isset( $extension['is_active'] ) && true === $extension['is_active'];
+			$has_errors = isset( $extension['has_errors'] ) && true === $extension['has_errors'];
+
+			$banner_text = '';
+
 			$tag_html = '';
 			if ( isset( $extension['tags'] ) ) {
 				foreach ( $extension['tags'] as $tag ) {
-					$classes .= ' ' . $tag;
+					$classes[] = $tag;
 					$tag_html .= '<span class="tag ' . $tag . '">'. $tag . '</span>';
 				}
 			}
+
 			foreach ( $extension['categories'] as $category ) {
-				$classes .= ' ' . foo_convert_to_key( $category );
+				$classes[] = foo_convert_to_key( $category );
 			}
+
 			if ( isset( $extension['css_class'] ) ) {
-				$classes .= ' ' . $extension['css_class'];
+				$classes[] = $extension['css_class'];
 			}
+
 			$thumbnail = $extension['thumbnail'];
 			if ( foo_starts_with( $thumbnail, '/') ) {
 				$thumbnail = rtrim( FOOGALLERY_URL, '/' ) . $thumbnail;
@@ -109,11 +107,42 @@ if ( $has_errors ) { ?>
 				$download_button_href = esc_url( isset( $download_button['href'] ) ? $download_button['href'] : $download_url );
 				$download_button_target = isset( $download_button['target'] ) ? ' target="' . $download_button['target'] . '" ' : '';
 				$download_button_text = isset( $download_button['text'] ) ? __( $download_button['text'], 'foogallery' ) : '';
+				$download_button_banner_text = ' data-banner-text="' . (isset( $download_button['banner-text'] ) ? $download_button['banner-text'] : __( 'downloading...', 'foogallery')) . '"';
 				$download_button_confirm = isset( $download_button['confirm'] ) ? ' data-confirm="' .$download_button['confirm'] . '" ' : '';
-				$download_button_html = "<a class=\"ext_action button button-primary download\" {$download_button_target}href=\"{$download_button_href}\" >{$download_button_text}</a>";
+				$download_button_html = "<a class=\"ext_action button button-primary download\" {$download_button_banner_text} {$download_button_target} href=\"{$download_button_href}\" >{$download_button_text}</a>";
 			}
+
+			//build up a freemius buy button
+			if ( isset( $extension['freemius_button'] ) ) {
+				$downloaded = $is_active = false;
+				$freemius_button = $extension['freemius_button'];
+				$freemius_button_text = isset( $freemius_button['text'] ) ? __( $freemius_button['text'], 'foogallery' ) : '';
+				$plugin_id = esc_attr( $freemius_button['plugin_id'] );
+				$pricing_id = esc_attr( $freemius_button['pricing_id'] );
+
+				$href = foogallery_fs()->addon_checkout_url( $plugin_id, $pricing_id );
+
+				$download_button_html = "<a class=\"ext_action button button-primary download\" href=\"{$href}\" >{$freemius_button_text}</a>";
+			}
+
+			if ( $downloaded ) {
+				$classes[] = 'downloaded';
+			} else {
+				$classes[] = 'download';
+			}
+
+			if ( $downloaded && $is_active ) {
+				$classes[] = 'activated';
+				$banner_text = __( 'Activated', 'foogallery' );
+			}
+
+			if ( $has_errors ) {
+				$classes[] = 'has_error';
+				$banner_text = $api->get_error_message( $slug );
+			}
+
 			?>
-		<div class="<?php echo $classes; ?>">
+		<div class="<?php echo implode(' ', $classes); ?>">
 
 			<div class="screenshot" style="background: url(<?php echo $thumbnail; ?>) no-repeat"></div>
 
@@ -128,15 +157,12 @@ if ( $has_errors ) { ?>
 				<?php if ( ! empty( $download_button_html ) ) {
 					echo $download_button_html;
 				} else { ?>
-				<a class="ext_action button button-primary download" data-confirm="<?php _e( 'Are you sure you want to download this extension?', 'foogallery' ); ?>" href="<?php echo esc_url( $download_url ); ?>"><?php _e( 'Download', 'foogallery' ); ?></a>
+				<a class="ext_action button button-primary download" data-banner-text="<?php _e( 'downloading...', 'foogallery'); ?>" data-confirm="<?php _e( 'Are you sure you want to download this extension?', 'foogallery' ); ?>" href="<?php echo esc_url( $download_url ); ?>"><?php _e( 'Download', 'foogallery' ); ?></a>
 				<?php } ?>
-				<a class="ext_action button button-primary activate" href="<?php echo esc_url( $activate_url ); ?>"><?php _e( 'Activate', 'foogallery' ); ?></a>
-				<a class="ext_action button button-secondary deactivate" href="<?php echo esc_url( $deactivate_url ); ?>"><?php _e( 'Deactivate', 'foogallery' ); ?></a>
-
+				<a class="ext_action button button-primary activate" data-banner-text="<?php _e( 'activating...', 'foogallery'); ?>" href="<?php echo esc_url( $activate_url ); ?>"><?php _e( 'Activate', 'foogallery' ); ?></a>
+				<a class="ext_action button button-secondary deactivate" data-banner-text="<?php _e( 'deactivating...', 'foogallery'); ?>" href="<?php echo esc_url( $deactivate_url ); ?>"><?php _e( 'Deactivate', 'foogallery' ); ?></a>
 			</div>
-			<div class="banner active-banner"><?php _e( 'Activated', 'foogallery' ); ?></div>
-			<div class="banner error-banner"><?php echo $api->get_error_message( $slug ); ?></div>
-			<div class="banner coming-soon-banner"><?php _e( 'Coming Soon!', 'foogallery' ); ?></div>
+			<div class="banner"><?php echo $banner_text; ?></div>
 		</div>
 		<?php } ?>
 	</div>

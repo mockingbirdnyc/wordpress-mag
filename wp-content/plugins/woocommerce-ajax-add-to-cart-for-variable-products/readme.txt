@@ -3,10 +3,10 @@ Contributors: Rcreators Websolutions
 Donate link: NA
 Tags: Woocommerce, Ajax, Variable Products, Add to cart
 Requires at least: 3.2
-Tested up to: 4.5
-Stable tag: 1.2.7
+Tested up to: 4.5.3
+Stable tag: 1.2.9
 WC requires at least: 2.0
-WC tested up to: 2.5.5
+WC tested up to: 2.6.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -40,6 +40,13 @@ This plugin activate ajax functionality everywhere. So like is it a single page,
 1. screenshot-1.jpg
 
 == Changelog ==
+
+= 1.2.9 =
+* Fixed - Simple product ajax works with plugin now.
+
+= 1.2.8 =
+* Added support for woocommerce lightbox plugin
+* Js updated to work with most of the theme now
 
 = 1.2.7 =
 * Network Activation Added - Suggested by User lucastello

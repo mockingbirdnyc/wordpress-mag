@@ -4,7 +4,7 @@ Plugin Name: Woocommerce Add to cart Ajax for variable products
 Plugin URI: http://www.rcreators.com/woocommerce-ajax-add-to-cart-variable-products
 Description: Ajax based add to cart for varialbe products in woocommerce.
 Author: Rishi Mehta - Rcreators Websolutions
-Version: 1.2.7
+Version: 1.2.9
 Author URI: http://rcreators.com
 */
 
@@ -80,12 +80,26 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			
 			function woocommerce_template_loop_add_to_cart() {
 				global $product;
+				
+				if ( $product ) {
+					$defaults = array(
+						'quantity' => 1,
+						'class'    => implode( ' ', array_filter( array(
+							'button',
+							'product_type_' . $product->product_type,
+							$product->is_purchasable() && $product->is_in_stock() ? 'add_to_cart_button' : '',
+							$product->supports( 'ajax_add_to_cart' ) ? 'ajax_add_to_cart' : ''
+						) ) )
+					);
+				
+					$args = apply_filters( 'woocommerce_loop_add_to_cart_args', wp_parse_args( $args, $defaults ), $product );
 		
-				if ($product->product_type == "variable" ) {
-					woocommerce_variable_add_to_cart();
-				}
-				else {
-					woocommerce_get_template( 'loop/add-to-cart.php' );
+					if ($product->product_type == "variable" ) {
+						woocommerce_variable_add_to_cart();
+					}
+					else {
+						wc_get_template( 'loop/add-to-cart.php', $args );
+					}
 				}
 			}
 		}

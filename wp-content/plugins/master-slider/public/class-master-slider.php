@@ -258,6 +258,17 @@ class Master_Slider {
 
     // add masterslider custom caps
     self::assign_custom_caps();
+
+    // determine the pro feature content type for panel tab
+    if( ! get_option( 'master-slider_ab_pro_feature_panel_content_type', 0 ) ){
+        update_option( 'master-slider_ab_pro_feature_panel_content_type', rand(1, 2) );
+    }
+
+    // determine the pro feature content type for pro setting page
+    if( ! get_option( 'master-slider_ab_pro_feature_setting_content_type', 0 ) ){
+        update_option( 'master-slider_ab_pro_feature_setting_content_type', rand(1, 2) );
+    }
+
     do_action( 'masterslider_activated', get_current_blog_id() );
   }
 

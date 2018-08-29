@@ -8,6 +8,7 @@ if ( ! class_exists( 'FooGallery_Admin_Columns' ) ) {
 	class FooGallery_Admin_Columns {
 
 		private $include_clipboard_script = false;
+		private $_foogallery = false;
 
 		public function __construct() {
 			add_filter( 'manage_edit-' . FOOGALLERY_CPT_GALLERY . '_columns', array( $this, 'gallery_custom_columns' ) );
@@ -23,7 +24,18 @@ if ( ! class_exists( 'FooGallery_Admin_Columns' ) ) {
 						FOOGALLERY_CPT_GALLERY . '_template' => __( 'Template', 'foogallery' ),
 						FOOGALLERY_CPT_GALLERY . '_count' => __( 'Media', 'foogallery' ),
 						FOOGALLERY_CPT_GALLERY . '_shortcode' => __( 'Shortcode', 'foogallery' ),
+						FOOGALLERY_CPT_GALLERY . '_usage' => __( 'Usage', 'foogallery' ),
 					);
+		}
+
+		private function get_local_gallery( $post ) {
+			if ( false === $this->_foogallery ) {
+				$this->_foogallery = FooGallery::get( $post );
+			} else if ( $this->_foogallery->ID !== $post->ID) {
+				$this->_foogallery = FooGallery::get( $post );
+			}
+
+			return $this->_foogallery;
 		}
 
 		public function gallery_custom_column_content( $column ) {
@@ -31,15 +43,15 @@ if ( ! class_exists( 'FooGallery_Admin_Columns' ) ) {
 
 			switch ( $column ) {
 				case FOOGALLERY_CPT_GALLERY . '_template':
-					$gallery = FooGallery::get( $post );
+					$gallery = $this->get_local_gallery( $post );
 					echo $gallery->gallery_template_name();
 					break;
 				case FOOGALLERY_CPT_GALLERY . '_count':
-					$gallery = FooGallery::get( $post );
+					$gallery = $this->get_local_gallery( $post );
 					echo $gallery->image_count();
 					break;
 				case FOOGALLERY_CPT_GALLERY . '_shortcode':
-					$gallery = FooGallery::get( $post );
+					$gallery = $this->get_local_gallery( $post );
 					$shortcode = $gallery->shortcode();
 
 					echo '<input type="text" readonly="readonly" size="' . strlen( $shortcode )  . '" value="' . esc_attr( $shortcode ) . '" class="foogallery-shortcode" />';
@@ -48,7 +60,7 @@ if ( ! class_exists( 'FooGallery_Admin_Columns' ) ) {
 
 					break;
 				case 'icon':
-					$gallery = FooGallery::get( $post );
+					$gallery = $this->get_local_gallery( $post );
 					$html_img = foogallery_find_featured_attachment_thumbnail_html( $gallery, array(
 						'width' => 60,
 						'height' => 60,
@@ -56,6 +68,19 @@ if ( ! class_exists( 'FooGallery_Admin_Columns' ) ) {
 					) );
 					if ( $html_img ) {
 						echo $html_img;
+					}
+					break;
+				case FOOGALLERY_CPT_GALLERY . '_usage':
+					$gallery = $this->get_local_gallery( $post );
+					$posts = $gallery->find_usages();
+					if ( $posts && count( $posts ) > 0 ) {
+						echo '<ul class="ul-disc">';
+						foreach ( $posts as $post ) {
+							echo edit_post_link( $post->post_title, '<li>', '</li>', $post->ID );
+						}
+						echo '</ul>';
+					} else {
+						_e( 'Not used!', 'foogallery' );
 					}
 					break;
 			}

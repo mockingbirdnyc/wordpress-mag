@@ -63,6 +63,7 @@ jQuery(document).ready(function($) {
             e.preventDefault();
 
             var $button = $(this),
+                $container = $('#foogallery_clear_css_optimizations_container'),
                 $spinner = $('#foogallery_clear_css_cache_spinner'),
                 data = 'action=foogallery_clear_css_optimizations' +
                 '&_wpnonce=' + $button.data('nonce') +
@@ -76,7 +77,7 @@ jQuery(document).ready(function($) {
                 url: ajaxurl,
                 data: data,
                 success: function(data) {
-                    alert(data);
+                    $container.html(data);
                 },
                 complete: function() {
                     $spinner.removeClass('is-active');
@@ -153,11 +154,116 @@ jQuery(document).ready(function($) {
         });
     };
 
+    FOOGALLERY.bindUninstallButton = function() {
+        $('.foogallery_uninstall').click(function(e) {
+            e.preventDefault();
+
+            var $button = $(this),
+                $container = $('#foogallery_uninstall_container'),
+                $spinner = $('#foogallery_uninstall_spinner'),
+                data = 'action=foogallery_uninstall' +
+                    '&_wpnonce=' + $button.data('nonce') +
+                    '&_wp_http_referer=' + encodeURIComponent($('input[name="_wp_http_referer"]').val());
+
+            $spinner.addClass('is-active');
+            $button.prop('disabled', true);
+
+            $.ajax({
+                type: "POST",
+                url: ajaxurl,
+                data: data,
+                success: function(data) {
+                    $container.html(data);
+                },
+                complete: function() {
+                    $spinner.removeClass('is-active');
+                    $button.prop('disabled', false);
+                }
+            });
+        });
+    };
+
+    FOOGALLERY.bindClearHTMLCacheButton = function() {
+        $('.foogallery_clear_html_cache').click(function(e) {
+            e.preventDefault();
+
+            var $button = $(this),
+                $container = $('#foogallery_clear_html_cache_container'),
+                $spinner = $('#foogallery_clear_html_cache_spinner'),
+                data = 'action=foogallery_clear_html_cache' +
+                    '&_wpnonce=' + $button.data('nonce') +
+                    '&_wp_http_referer=' + encodeURIComponent($('input[name="_wp_http_referer"]').val());
+
+            $spinner.addClass('is-active');
+            $button.prop('disabled', true);
+
+            $.ajax({
+                type: "POST",
+                url: ajaxurl,
+                data: data,
+                success: function(data) {
+                    $container.html(data);
+                },
+                complete: function() {
+                    $spinner.removeClass('is-active');
+                    $button.prop('disabled', false);
+                }
+            });
+        });
+    };
+
+    //find all generic foogallery ajax buttons and bind them
+    FOOGALLERY.bindSettingsAjaxButtons = function () {
+        $('.foogallery_settings_ajax').click(function(e) {
+            e.preventDefault();
+
+            var $button = $(this),
+                $container = $button.parents('.foogallery_settings_ajax_container:first'),
+                $spinner = $container.find('.spinner'),
+                response = $button.data('response'),
+                confirmMessage = $button.data('confirm'),
+                confirmResult = true,
+                data = 'action=' + $button.data('action') +
+                    '&_wpnonce=' + $button.data('nonce') +
+                    '&_wp_http_referer=' + encodeURIComponent($('input[name="_wp_http_referer"]').val());
+
+            if ( confirmMessage ) {
+                confirmResult = confirm( confirmMessage );
+            };
+
+            if ( confirmResult ) {
+                $spinner.addClass('is-active');
+                $button.prop('disabled', true);
+
+                $.ajax({
+                    type    : "POST",
+                    url     : ajaxurl,
+                    data    : data,
+                    success : function (data) {
+                        if (response === 'replace_container') {
+                            $container.html(data);
+                        } else if (response === 'alert') {
+                            alert(data);
+                        }
+                    },
+                    complete: function () {
+                        $spinner.removeClass('is-active');
+                        $button.prop('disabled', false);
+                    }
+                });
+            }
+        });
+    };
+
     $(function() { //wait for ready
         FOOGALLERY.loadImageOptimizationContent();
         FOOGALLERY.bindClearCssOptimizationButton();
         FOOGALLERY.bindTestThumbnailButton();
         FOOGALLERY.bindApplyRetinaDefaults();
+        FOOGALLERY.bindUninstallButton();
+        FOOGALLERY.bindClearHTMLCacheButton();
+
+        FOOGALLERY.bindSettingsAjaxButtons();
     });
 
 }(window.FOOGALLERY = window.FOOGALLERY || {}, jQuery));

@@ -108,18 +108,129 @@ function msp_save_custom_styles() {
 }
 
 
+function msp_admin_notice_links_callback( $matches ){
+    return sprintf( '<a href="%s">%s</a>', $matches[2], $matches[1] );
+}
+
+/**
+ * Retrieves a URL using the HTTP GET method
+ *
+ * @return mixed|boolean    The body content
+ */
+function msp_remote_post( $url, $args = array() ) {
+    $request = wp_remote_post( $url, $args );
+
+    if ( ! is_wp_error( $request ) || wp_remote_retrieve_response_code( $request ) === 200 ) {
+        return $request['body'];
+    }
+    return false;
+}
+
+
+/**
+ * Display a notice for running the setup wizard
+ *
+ * @return void
+ */
+function msp_custom_admin_notice(){
+
+    if( ! current_user_can( 'administrator' ) ){
+        return;
+    }
+    echo MSP_Notices::get_instance()->get_notice( 'ms-notice-info-global' );
+}
+add_action( 'admin_notices', 'msp_custom_admin_notice' );
+
+
+/**
+ * Get total number of downloads by item slug
+ *
+ * @param  string $remote_url Remote URL to retrieve data from
+ * @param  array  $body_args  Parameters to pass to the remote API address
+ *
+ * @return array|string       The API response
+ */
+function msp_get_averta_remote_api_data( $remote_url, $body_args ){
+    $args = array(
+        'timeout'    => ( ( defined('DOING_CRON') && DOING_CRON ) ? 30 : 10 ),
+        'body'       => $body_args
+    );
+
+    $request = wp_remote_get( $remote_url, $args );
+
+    if ( is_wp_error( $request ) || wp_remote_retrieve_response_code( $request ) !== 200 ) {
+        return '...';
+    }
+
+    return $request['body'];
+}
+
+
+/**
+ * A shortcode to retrieve data from API
+ *
+ * @return string
+ */
+function msp_api_stats_shortcode( $atts , $content = null ) {
+
+    // parse attributes
+    $atts = shortcode_atts(
+        array(
+            'branch'            => 'envato',
+            'group'             => 'items',
+            'cat'               => 'info',
+            'action'            => 'stats',
+            'item-id'           => '', // item id
+            'item-name'         => '', // item name or slug
+            'item-param'        => 'sales_number', // item param
+            'format'            => '',
+            'cache_in_minutes'  => 1440
+        ),
+        $atts,
+        'averta-api'
+    );
+
+    if( empty( $atts['item-id'] ) && empty( $atts['item-name'] ) ){
+        return 'item-id or item-name is required';
+    }
+
+    // sanitize the cache period
+    $atts['cache_in_minutes'] = is_numeric( $atts['cache_in_minutes'] ) ? (int) $atts['cache_in_minutes'] : 180;
+
+    // create a transient id base on the passed options
+    $options_string_id = implode( '_' , $atts );
+
+    if( $atts['cache_in_minutes'] > 0 && false !== ( $result = msp_get_transient( $options_string_id ) ) ){
+        return $result;
+    }
+
+    // request data
+    $remote_url   = 'http://api.averta.net/';
+    $request_args = $atts;
+    unset( $request_args['cache_in_minutes'] );
+
+    $result = msp_get_averta_remote_api_data( $remote_url, $request_args );
+    $result = apply_filters( 'auxin_averta_api_shortcode_result', $result, $atts );
+
+    if( $atts['cache_in_minutes'] > 0 ){
+        msp_set_transient( $options_string_id, $result, $atts['cache_in_minutes'] * MINUTE_IN_SECONDS );
+    }
+
+    return $result;
+}
+
+add_shortcode( 'msp-stats', 'msp_api_stats_shortcode' );
+
+
 /**
  * Get the number of PRO users
  *
  * @return int
  */
 function msp_get_pro_users_num(){
-    echo '12500+';
+    $download_num = msp_api_stats_shortcode( array( 'item-id' => '7467925', 'item-param' => 'sales_number', 'cache_in_minutes' => 1200  ) );
+    return number_format_i18n( floor( ($download_num/1000) ) * 1000 ). '+';
 }
-
-
-
-
 
 
 /**

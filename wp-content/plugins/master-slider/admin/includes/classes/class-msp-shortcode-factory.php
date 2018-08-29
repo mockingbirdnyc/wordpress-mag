@@ -61,7 +61,7 @@ class MSP_Shortcode_Factory {
 		$attrs = '';
 
 		// the list of attributes which should be excluded from slide shortcode
-		$exclude_slide_attrs = array( 'layers', 'layer_ids', 'ishide', 'info' );
+		$exclude_slide_attrs = array( 'layers', 'layer_ids', 'ishide', 'info', 'is_overlay_layers' );
 
 		foreach ( $slide as $attr => $attr_value ) {
 
@@ -94,7 +94,8 @@ class MSP_Shortcode_Factory {
 				// if "insert thumb" option was enabled append the thumbnail tag
 				if( 'true' == $this->parsed_slider_data['setting']['thumbs_in_tab'] ) {
 					$thumb_height  = $this->parsed_slider_data['setting']['thumbs_height'];
-					$tab_content = sprintf( '{{thumb%s}}', $thumb_height ) . $tab_content;
+                    //$tab_content = sprintf( '{{thumb%s}}', $thumb_height ) . $tab_content;
+					$tab_content = $tab_content;
 				}
 				$attrs .= sprintf( '%s="%s" ', $attr, esc_attr( $tab_content ) );
 
@@ -145,7 +146,9 @@ class MSP_Shortcode_Factory {
 
         foreach ( $slides as $slide ) {
             if( ! empty( $slide['ishide'] ) && 'true' != $slide['ishide'] ){
-                $shortcodes .= $this->get_ms_slide_shortcode( $slide );
+                if( 'true' != $slide['is_overlay_layers'] ){
+                    $shortcodes .= $this->get_ms_slide_shortcode( $slide );
+                }
             }
         }
 

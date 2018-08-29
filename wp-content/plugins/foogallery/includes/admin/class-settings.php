@@ -12,10 +12,11 @@ if ( ! class_exists( 'FooGallery_Admin_Settings' ) ) {
 			add_action( 'foogallery_admin_settings_custom_type_render_setting', array( $this, 'render_custom_setting_types' ) );
 			add_action( 'foogallery_admin_settings_after_render_setting', array( $this, 'after_render_setting' ) );
 
-			// Ajax calls for clearing CSS optimization cache
+			// Ajax calls
 			add_action( 'wp_ajax_foogallery_clear_css_optimizations', array( $this, 'ajax_clear_css_optimizations' ) );
 			add_action( 'wp_ajax_foogallery_thumb_generation_test', array( $this, 'ajax_thumb_generation_test' ) );
 			add_action( 'wp_ajax_foogallery_apply_retina_defaults', array( $this, 'ajax_apply_retina_defaults' ) );
+			add_action( 'wp_ajax_foogallery_uninstall', array( $this, 'ajax_uninstall' ) );
 		}
 
 		/**
@@ -64,11 +65,26 @@ if ( ! class_exists( 'FooGallery_Admin_Settings' ) ) {
 				'section' => __( 'Gallery Defaults', 'foogallery' )
 			);
 
-			$galleries = foogallery_get_all_galleries();
+			$gallery_posts = get_posts( array(
+				'post_type'     => FOOGALLERY_CPT_GALLERY,
+				'post_status'	=> array( 'publish', 'draft' ),
+				'cache_results' => false,
+				'nopaging'      => true,
+			) );
+
+			$galleries = array();
+
+			foreach ( $gallery_posts as $post ) {
+				$galleries[] = array(
+					'ID' => $post->ID,
+					'name' => $post->post_title
+				);
+			}
+
 			$gallery_choices = array();
 			$gallery_choices[] = __( 'No default', 'foogallery' );
 			foreach ( $galleries as $gallery ) {
-				$gallery_choices[ $gallery->ID ] = $gallery->name;
+				$gallery_choices[ $gallery['ID'] ] = $gallery['name'];
 			}
 
 			$settings[] = array(
@@ -84,11 +100,13 @@ if ( ! class_exists( 'FooGallery_Admin_Settings' ) ) {
 			$settings[] = array(
 				'id'      => 'caption_title_source',
 				'title'   => __( 'Caption Title Source', 'foogallery' ),
-				'desc'    => __( 'By default, image caption titles are pulled from the attachment "Caption" field. Alternatively, you can also choose to pull from the attachment "Title" field.', 'foogallery' ),
+				'desc'    => __( 'By default, image caption titles are pulled from the attachment "Caption" field. Alternatively, you can choose to use other fields.', 'foogallery' ),
 				'type'    => 'select',
 				'choices' => array(
-					'caption' => __('Attachment Caption Field', 'foogallery'),
-					'title' => __('Attachment Title Field', 'foogallery')
+					'title'   => foogallery_get_attachment_field_friendly_name( 'title' ),
+					'caption' => foogallery_get_attachment_field_friendly_name( 'caption' ),
+					'alt'     => foogallery_get_attachment_field_friendly_name( 'alt' ),
+					'desc'    => foogallery_get_attachment_field_friendly_name( 'desc' )
 				),
 				'default' => 'caption',
 				'tab'     => 'general',
@@ -97,20 +115,20 @@ if ( ! class_exists( 'FooGallery_Admin_Settings' ) ) {
 			);
 
 			$settings[] = array(
-					'id'      => 'caption_desc_source',
-					'title'   => __( 'Caption Description Source', 'foogallery' ),
-					'desc'    => __( 'By default, image caption descriptions are pulled from the attachment "Description" field. Alternatively, you can choose to use other fields.', 'foogallery' ),
-					'type'    => 'select',
-					'choices' => array(
-							'desc' => __('Attachment Description Field', 'foogallery'),
-							'title' => __('Attachment Title Field', 'foogallery'),
-							'caption' => __('Attachment Caption Field', 'foogallery'),
-							'alt' => __('Attachment Alt Field', 'foogallery')
-					),
-					'default' => 'desc',
-					'tab'     => 'general',
-					'section' => __( 'Captions', 'foogallery' ),
-					'spacer'  => '<span class="spacer"></span>'
+				'id'      => 'caption_desc_source',
+				'title'   => __( 'Caption Description Source', 'foogallery' ),
+				'desc'    => __( 'By default, image caption descriptions are pulled from the attachment "Description" field. Alternatively, you can choose to use other fields.', 'foogallery' ),
+				'type'    => 'select',
+				'choices' => array(
+					'title'   => foogallery_get_attachment_field_friendly_name( 'title' ),
+					'caption' => foogallery_get_attachment_field_friendly_name( 'caption' ),
+					'alt'     => foogallery_get_attachment_field_friendly_name( 'alt' ),
+					'desc'    => foogallery_get_attachment_field_friendly_name( 'desc' )
+				),
+				'default' => 'desc',
+				'tab'     => 'general',
+				'section' => __( 'Captions', 'foogallery' ),
+				'spacer'  => '<span class="spacer"></span>'
 			);
 
 			$settings[] = array(
@@ -169,7 +187,7 @@ if ( ! class_exists( 'FooGallery_Admin_Settings' ) ) {
 			$settings[] = array(
 					'id'      => 'use_original_thumbs',
 					'title'   => __( 'Use Original Thumbnails', 'foogallery' ),
-					'desc'    => __( 'Allow for the original thumbnails to be used when possible. This can be useful if your thumbs are animated gifs.', 'foogallery' ),
+					'desc'    => __( 'Allow for the original thumbnails to be used when possible. This can be useful if your thumbs are animated gifs.<br/>PLEASE NOTE : this will only work if your gallery thumbnail sizes are identical to your thumbnail sizes under Settings -> Media.', 'foogallery' ),
 					'type'    => 'checkbox',
 					'tab'     => 'thumb'
 			);
@@ -178,6 +196,14 @@ if ( ! class_exists( 'FooGallery_Admin_Settings' ) ) {
 				'id'      => 'thumb_resize_animations',
 				'title'   => __( 'Resize Animated GIFs', 'foogallery' ),
 				'desc'    => __( 'Should animated gifs be resized or not. If enabled, only the first frame is used in the resize.', 'foogallery' ),
+				'type'    => 'checkbox',
+				'tab'     => 'thumb'
+			);
+
+			$settings[] = array(
+				'id'      => 'animated_gif_use_original_image',
+				'title'   => __( 'Show Animated Thumbnails', 'foogallery' ),
+				'desc'    => __( 'If animated GIFs are used, then show the original GIF as the thumbnail.', 'foogallery' ),
 				'type'    => 'checkbox',
 				'tab'     => 'thumb'
 			);
@@ -244,6 +270,51 @@ if ( ! class_exists( 'FooGallery_Admin_Settings' ) ) {
 			);
 			//endregion Language Tab
 
+			//region Advanced Tab
+			$tabs['advanced'] = __( 'Advanced', 'foogallery' );
+
+            $settings[] = array(
+                'id'      => 'enable_custom_ready',
+                'title'   => __( 'Custom Ready Event', 'foogallery' ),
+                'desc'    => sprintf( __( 'By default the jQuery ready event is used, but there are sometimes unavoidable javascript errors on the page, which could result in the default gallery templates not initializing correctly. Enable this setting to use a built-in custom ready event to overcome this if needed.', 'foogallery' ), foogallery_plugin_name() ),
+                'type'    => 'checkbox',
+                'tab'     => 'advanced'
+            );
+
+			$settings[] = array(
+				'id'      => 'enable_legacy_thumb_cropping',
+				'title'   => __( 'Enable Legacy Thumb Cropping', 'foogallery' ),
+				'desc'    => __( 'For when you want to enable legacy cropping options in certain gallery templates. This is not recommended.', 'foogallery' ),
+				'type'    => 'checkbox',
+				'tab'     => 'advanced'
+			);
+
+			$settings[] = array(
+				'id'      => 'enable_debugging',
+				'title'   => __( 'Enable Debugging', 'foogallery' ),
+				'desc'    => sprintf( __( 'Helps to debug problems and diagnose issues. Enable debugging if you need support for an issue you are having.', 'foogallery' ), foogallery_plugin_name() ),
+				'type'    => 'checkbox',
+				'tab'     => 'advanced'
+			);
+
+			$settings[] = array(
+				'id'      => 'uninstall',
+				'title'   => __( 'Full Uninstall', 'foogallery' ),
+				'desc'    => sprintf( __( 'Run a full uninstall of %s, which includes removing all galleries, settings and metadata. This basically removes all traces of the plugin from your system. Please be careful - there is no undo!', 'foogallery' ), foogallery_plugin_name() ),
+				'type'    => 'uninstall',
+				'tab'     => 'advanced'
+			);
+
+//			$settings[] = array(
+//				'id'      => 'force_https',
+//				'title'   => __( 'Force HTTPS', 'foogallery' ),
+//				'desc'    => __( 'Force all thumbnails to use HTTPS protocol.', 'foogallery' ),
+//				'type'    => 'checkbox',
+//				'tab'     => 'advanced'
+//			);
+
+			//endregion Advanced Tab
+
 			return apply_filters( 'foogallery_admin_settings_override', array(
 				'tabs'     => $tabs,
 				'sections' => array(),
@@ -256,8 +327,15 @@ if ( ! class_exists( 'FooGallery_Admin_Settings' ) ) {
 		 */
 		function render_custom_setting_types( $args ) {
 			if ( 'clear_optimization_button' === $args['type'] ) { ?>
-				<input type="button" data-nonce="<?php echo esc_attr( wp_create_nonce( 'foogallery_clear_css_optimizations' ) ); ?>" class="button-primary foogallery_clear_css_optimizations" value="<?php _e( 'Clear CSS Optimization Cache', 'foogallery' ); ?>">
-				<span id="foogallery_clear_css_cache_spinner" style="position: absolute" class="spinner"></span>
+				<div id="foogallery_clear_css_optimizations_container">
+					<input type="button" data-nonce="<?php echo esc_attr( wp_create_nonce( 'foogallery_clear_css_optimizations' ) ); ?>" class="button-primary foogallery_clear_css_optimizations" value="<?php _e( 'Clear CSS Optimization Cache', 'foogallery' ); ?>">
+					<span id="foogallery_clear_css_cache_spinner" style="position: absolute" class="spinner"></span>
+				</div>
+			<?php } else if ( 'uninstall' === $args['type'] ) { ?>
+				<div id="foogallery_uninstall_container">
+					<input type="button" data-nonce="<?php echo esc_attr( wp_create_nonce( 'foogallery_uninstall' ) ); ?>" class="button-primary foogallery_uninstall" value="<?php _e( 'Run Full Uninstall', 'foogallery' ); ?>">
+					<span id="foogallery_uninstall_spinner" style="position: absolute" class="spinner"></span>
+				</div>
 			<?php } else if ( 'thumb_generation_test' === $args['type'] ) { ?>
 				<div id="foogallery_thumb_generation_test_container">
 					<input type="button" data-nonce="<?php echo esc_attr( wp_create_nonce( 'foogallery_thumb_generation_test' ) ); ?>" class="button-primary foogallery_thumb_generation_test" value="<?php _e( 'Run Tests', 'foogallery' ); ?>">
@@ -337,10 +415,19 @@ if ( ! class_exists( 'FooGallery_Admin_Settings' ) ) {
 				}
 
 				echo sprintf( _n(
-					'1 FooGallery successfully updated to use the default retina settings.',
-					'%s FooGalleries successfully updated to use the default retina settings.',
+					'1 gallery successfully updated to use the default retina settings.',
+					'%s galleries successfully updated to use the default retina settings.',
 					$gallery_update_count, 'foogallery' ), $gallery_update_count );
 
+				die();
+			}
+		}
+
+		function ajax_uninstall() {
+			if ( check_admin_referer( 'foogallery_uninstall' ) && current_user_can( 'install_plugins' ) ) {
+				foogallery_uninstall();
+
+				_e('All traces of the plugin were removed from your system!', 'foogallery' );
 				die();
 			}
 		}

@@ -1,12 +1,14 @@
-/* Wc add to cart version 1.2.7 */
+/* Wc add to cart version 1.2.9 */
 jQuery( function( $ ) {
 
 	// wc_add_to_cart_params is required to continue, ensure the object exists
 	if ( typeof wc_add_to_cart_params === 'undefined' )
 		return false;
-
+	
 	// Ajax add to cart
-	$( document ).on( 'click', '.product-type-variable .single_add_to_cart_button', function() {
+	$( document ).on( 'click', '.variations_form .single_add_to_cart_button', function(e) {
+		
+		e.preventDefault();
 		
 		$variation_form = $( this ).closest( '.variations_form' );
 		var var_id = $variation_form.find( 'input[name=variation_id]' ).val();
@@ -75,7 +77,7 @@ jQuery( function( $ ) {
 		
 		var $thisbutton = $( this );
 
-		if ( $thisbutton.is( '.product-type-variable .single_add_to_cart_button' ) ) {
+		if ( $thisbutton.is( '.variations_form .single_add_to_cart_button' ) ) {
 
 			$thisbutton.removeClass( 'added' );
 			$thisbutton.addClass( 'loading' );
