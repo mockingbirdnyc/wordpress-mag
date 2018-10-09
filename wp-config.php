@@ -65,8 +65,8 @@ switch(ENVIRONMENT){
 //        define('DB_PASSWORD', 'PASSWORD');
 //        define('DB_HOST', '127.0.0.1');
 //        define('DB_HOST_SLAVE', '127.0.0.1' );
-        define('WP_SITEURL', 'http://magazine.mbird.com/');
-        define('WP_HOME', 'http://magazine.mbird.com/');
+        define('WP_SITEURL', 'https://magazine.mbird.com/');
+        define('WP_HOME', 'https://magazine.mbird.com/');
         define('WP_DEBUG', false);
 
         break;
@@ -154,5 +154,3 @@ if ( !defined('ABSPATH') )
 
 /** Sets up WordPress vars and included files. */
 require_once(ABSPATH . 'wp-settings.php');
-
-
