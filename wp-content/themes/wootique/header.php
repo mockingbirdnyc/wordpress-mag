@@ -19,9 +19,9 @@
 <?php woo_meta(); ?>
 
 <!-- CSS  -->
-	
+
 <!-- The main stylesheet -->
-<link href='http://fonts.googleapis.com/css?family=Voltaire' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Voltaire' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="<?php echo get_stylesheet_directory_uri(); ?>/style.css">
 
 <!-- /CSS -->
@@ -29,7 +29,7 @@
 <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="<?php $GLOBALS['feedurl'] = get_option('woo_feed_url'); if ( !empty($feedurl) ) { echo $feedurl; } else { echo get_bloginfo_rss('rss2_url'); } ?>" />
 
 <link rel="pingback" href="<?php bloginfo('pingback_url'); ?>" />
-      
+
 <?php wp_head(); ?>
 <?php woo_head(); ?>
 
@@ -49,14 +49,14 @@
 	</div><!-- /#top -->
 
     <?php } ?>
-    
+
     <div class="header">
-					
+
 			<div id="logo">
-	
-			<?php 
-				if ($woo_options['woo_texttitle'] != 'true' ) : 
-				$logo = $woo_options['woo_logo']; 
+
+			<?php
+				if ($woo_options['woo_texttitle'] != 'true' ) :
+				$logo = $woo_options['woo_logo'];
 				if ( is_ssl() ) { $logo = preg_replace("/^http:/", "https:", $woo_options['woo_logo']); }
 			?>
 				<h1>
@@ -65,18 +65,18 @@
 					</a>
 				</h1>
 	        <?php endif; ?>
-	
+
 	        <?php if( is_singular() && !is_front_page() ) : ?>
 				<span class="site-title"><a href="<?php echo home_url( '/' ); ?>"><?php bloginfo( 'name' ); ?></a></span>
 	        <?php else : ?>
 				<h1 class="site-title"><a href="<?php echo home_url( '/' ); ?>"><?php bloginfo( 'name' ); ?></a></h1>
 	        <?php endif; ?>
 				<span class="site-description"><?php bloginfo( 'description' ); ?></span>
-	
+
 			</div><!-- /#logo -->
-			
+
 			<?php woo_nav_before(); ?>
-			
+
 			<div id="navigation" class="col-full">
 				<?php
 				if ( function_exists( 'has_nav_menu') && has_nav_menu( 'primary-menu') ) {
@@ -97,14 +97,14 @@
 					?>
 		        </ul><!-- /#nav -->
 		        <?php } ?>
-		        
+
 		        <?php woo_nav_after(); ?>
-		        
+
 			</div><!-- /#navigation -->
-		
+
 		</div>
 
-	
+
 	<div id="container" class="col-full">
-	
+
 	<?php woo_content_before(); ?>

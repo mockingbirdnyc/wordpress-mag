@@ -208,7 +208,7 @@ class Master_Slider_Admin {
         $custom_fonts = $mspdb->get_slider_field_val( $slider_id, 'custom_fonts' );
 
         if ( ! empty( $custom_fonts ) )
-          printf( "<link rel='stylesheet' id='masterslider-admin-fonts' href='http://fonts.googleapis.com/css?family=%s' type='text/css' />\n", $custom_fonts );
+          printf( "<link rel='stylesheet' id='masterslider-admin-fonts' href='https://fonts.googleapis.com/css?family=%s' type='text/css' />\n", $custom_fonts );
       }
     }
   }

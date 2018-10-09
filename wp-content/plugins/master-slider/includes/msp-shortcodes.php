@@ -609,7 +609,7 @@ function msp_masterslider_wrapper_shortcode( $atts, $content = null ) {
 				}
 
 				if ( ! empty( $gfonts ) ) {
-					$link_tag = sprintf( "<link rel='stylesheet' id='ms-fonts'  href='http://fonts.googleapis.com/css?family=%s' type='text/css' media='all' />", $gfonts );
+					$link_tag = sprintf( "<link rel='stylesheet' id='ms-fonts'  href='https://fonts.googleapis.com/css?family=%s' type='text/css' media='all' />", $gfonts );
 					echo "\n\t\t\t\t" . sprintf( '$("head").append( "%s" );', $link_tag ) . "\n";
 				}
 				// add slider instance to global scope
@@ -1104,5 +1104,3 @@ function msp_masterslider_slide_flickr_shortcode( $atts, $content = null ) {
 
 	return apply_filters( 'masterslider_slide_flickr_shortcode', "\t\t\t\t".$output, $args );
 }
-
-

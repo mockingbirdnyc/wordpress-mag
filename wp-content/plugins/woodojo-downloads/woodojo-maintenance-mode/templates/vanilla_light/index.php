@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 <meta charset="<?php bloginfo( 'charset' ); ?>" />
 <title><?php $this->page_title(); ?></title>
 <link rel="stylesheet" type="text/css" href="<?php echo esc_attr( esc_url( $settings['path'] . 'style.css' ) ); ?>" media="screen" />
-<link href="http://fonts.googleapis.com/css?family=Oswald:400,300|Muli" rel="stylesheet" type='text/css'>
+<link href="https://fonts.googleapis.com/css?family=Oswald:400,300|Muli" rel="stylesheet" type='text/css'>
 </head>
 <body <?php body_class(); ?>>
 <div id="wrapper">
