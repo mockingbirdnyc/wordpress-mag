@@ -188,6 +188,15 @@ function foogallery_admin_systeminfo_url() {
 }
 
 /**
+ * Returns the FooGallery pricing page Url within the admin
+ *
+ * @return string The Url to the FooGallery pricing page in admin
+ */
+function foogallery_admin_pricing_url() {
+	return admin_url( add_query_arg( array( 'page' => FOOGALLERY_ADMIN_MENU_PRICING_SLUG ), foogallery_admin_menu_parent_slug() ) );
+}
+
+/**
  * Get a foogallery template setting for the current foogallery that is being output to the frontend
  * @param string	$key
  * @param string	$default
@@ -264,7 +273,7 @@ function foogallery_add_submenu_page( $menu_title, $capability, $menu_slug, $fun
  *
  * @return FooGallery[] array of FooGallery galleries
  */
-function foogallery_get_all_galleries( $excludes = false ) {
+function foogallery_get_all_galleries( $excludes = false, $extra_args = false ) {
 	$args = array(
 		'post_type'     => FOOGALLERY_CPT_GALLERY,
 		'post_status'	=> array( 'publish', 'draft' ),
@@ -274,6 +283,10 @@ function foogallery_get_all_galleries( $excludes = false ) {
 
 	if ( is_array( $excludes ) ) {
 		$args['post__not_in'] = $excludes;
+	}
+
+	if ( is_array( $extra_args ) ) {
+		$args = array_merge( $args, $extra_args );
 	}
 
 	$gallery_posts = get_posts( $args );
@@ -381,6 +394,8 @@ function foogallery_build_class_attribute( $gallery ) {
 
 	$classes = apply_filters( 'foogallery_build_class_attribute', $classes, $gallery );
 
+	$classes = array_filter( $classes );
+
 	return implode( ' ', $classes );
 }
 
@@ -452,7 +467,11 @@ function foogallery_build_container_data_options( $gallery, $attributes ) {
 
 	$options = apply_filters( 'foogallery_build_container_data_options-'. $gallery->gallery_template, $options, $gallery, $attributes );
 
-	return json_encode( $options );
+	if ( defined( 'JSON_UNESCAPED_UNICODE' ) ) {
+		return json_encode( $options, JSON_UNESCAPED_UNICODE );
+	} else {
+		return json_encode( $options );
+	}
 }
 
 /**
@@ -1042,6 +1061,23 @@ function foogallery_current_gallery_attachments_for_rendering() {
 }
 
 /**
+ * Return attachment ID from a URL
+ *
+ * @param $url String URL to the image we are checking
+ *
+ * @return null or attachment ID
+ */
+function foogallery_get_attachment_id_by_url($url) {
+	global $wpdb;
+	$query = "SELECT ID FROM {$wpdb->posts} WHERE guid=%s";
+	$attachment = $wpdb->get_col( $wpdb->prepare( $query, $url ) );
+	if ( count( $attachment ) > 0 ) {
+		return $attachment[0];
+	}
+	return null;
+}
+
+/**
  * Safer escaping for HTML attributes.
  *
  * @since 1.4.31
@@ -1053,4 +1089,89 @@ function foogallery_esc_attr( $text ) {
 	$safe_text = wp_check_invalid_utf8( $text );
 	$safe_text = _wp_specialchars( $safe_text, ENT_QUOTES );
 	return $safe_text;
+}
+
+
+/**
+ * Create a FooGallery and return the ID
+ *
+ * @param $template
+ * @param $attachment_ids
+ *
+ * @return int
+ */
+function foogallery_create_gallery( $template, $attachment_ids ) {
+
+	if ( empty( $template ) ) {
+		$template = foogallery_default_gallery_template();
+	}
+
+	//create an empty foogallery
+	$foogallery_args = array(
+		'post_title'  => 'Demo Gallery',
+		'post_type'   => FOOGALLERY_CPT_GALLERY,
+		'post_status' => 'publish',
+	);
+	$gallery_id = wp_insert_post( $foogallery_args );
+
+	//set a gallery template
+	add_post_meta( $gallery_id, FOOGALLERY_META_TEMPLATE, $template, true );
+
+	$settings = array();
+
+	//set default settings if there are any, and also if the template is the same as the default
+	if ( foogallery_default_gallery_template() === $template ) {
+		$default_gallery_id = foogallery_get_setting( 'default_gallery_settings' );
+		if ( $default_gallery_id ) {
+			$settings = get_post_meta( $default_gallery_id, FOOGALLERY_META_SETTINGS, true );
+			add_post_meta( $this->foogallery_id, FOOGALLERY_META_SETTINGS, $settings, true );
+		}
+	}
+
+	if ( empty( $settings) ) {
+		switch ( $template ) {
+			case 'masonry':
+				$settings = array(
+					'foogallery_items_view' => 'preview',
+					'masonry_alignment' =>'fg-center',
+					'masonry_border_size' =>'fg-border-thin',
+					'masonry_caption_desc_source' =>'',
+					'masonry_caption_title_source' =>'',
+					'masonry_captions_limit_length' =>'',
+					'masonry_custom_settings' =>'',
+					'masonry_drop_shadow' =>'fg-shadow-outline',
+					'masonry_filtering_type' =>'',
+					'masonry_gutter_width' =>'10',
+					'masonry_hover_effect_caption_visibility' =>'fg-captions-bottom',
+					'masonry_hover_effect_color' =>'',
+					'masonry_hover_effect_icon' =>'fg-hover-zoom',
+					'masonry_hover_effect_preset' =>'fg-custom',
+					'masonry_hover_effect_scale' =>'',
+					'masonry_hover_effect_transition' =>'fg-hover-fade',
+					'masonry_inner_shadow' =>'',
+					'masonry_layout' =>'fixed',
+					'masonry_lazyload' =>'',
+					'masonry_lightbox' =>'foobox',
+					'masonry_loaded_effect' =>'fg-loaded-fade-in',
+					'masonry_loading_icon' =>'fg-loading-default',
+					'masonry_paging_type' =>'',
+					'masonry_rounded_corners' =>'',
+					'masonry_state' =>'no',
+					'masonry_theme' =>'fg-dark',
+					'masonry_thumbnail_link' =>'image',
+					'masonry_thumbnail_width' =>'250',
+					'masonry_video_autoplay' =>'yes',
+					'masonry_video_hover_icon' =>'fg-video-default',
+					'masonry_video_size' =>'640x360',
+					'masonry_video_sticky_icon' =>'',
+				);
+		}
+	}
+
+	add_post_meta( $gallery_id, FOOGALLERY_META_SETTINGS, $settings, true );
+
+	$attachments = explode( ',', $attachment_ids );
+	update_post_meta( $gallery_id, FOOGALLERY_META_ATTACHMENTS, $attachments );
+
+	return $gallery_id;
 }
