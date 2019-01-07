@@ -1,15 +1,3 @@
-NameVirtualHost *:80
-<VirtualHost *:80>
-  ServerName conference.mbird.com
-  Redirect / https://conference.mbird.com/
-</VirtualHost>
-
-<VirtualHost _default_:443>
-  ServerName conference.example.com
-  DocumentRoot /usr/local/apache2/htdocs
-  SSLEngine On
-</VirtualHost>
-
 # BEGIN WordPress
 <IfModule mod_rewrite.c>
 RewriteEngine On
@@ -18,6 +6,8 @@ RewriteRule ^index\.php$ - [L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule . /index.php [L]
+RewriteCond %{HTTP:X-Forwarded-Proto} =http
+RewriteRule .* https://%{HTTP:Host}%{REQUEST_URI} [L,R=permanent]
 </IfModule>
 
 # END WordPress
