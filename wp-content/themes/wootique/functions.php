@@ -32,7 +32,7 @@ $includes = array(
 
 // Allow child themes/plugins to add widgets to be loaded.
 $includes = apply_filters( 'woo_includes', $includes );
-				
+
 foreach ( $includes as $i ) {
 	locate_template( $i, true );
 }
@@ -43,7 +43,7 @@ foreach ( $includes as $i ) {
 add_action ('init', 'change_columns');
 function change_columns() {
     add_filter( 'loop_shop_columns', 'custom_loop_columns' );
-    
+
     function custom_loop_columns() {
         return 4;
     }
@@ -52,6 +52,14 @@ add_filter( 'loop_shop_per_page', function ( $cols ) {
     // $cols contains the current number of products per page based on the value stored on Options -> Reading
     // Return the number of products you wanna show per page.
     return 36;
+}, 20 );
+
+// needed for the "Poor Guy's Swiss Knife" plugin to have a reference to the wc_ajax_url value
+add_filter( 'wc_cart_fragments_params', function( $params ) {
+    if( false === $params ) {
+        $params = array( 'wc_ajax_url' => '/' );
+    }
+    return $params;
 }, 20 );
 
 /*-----------------------------------------------------------------------------------*/
