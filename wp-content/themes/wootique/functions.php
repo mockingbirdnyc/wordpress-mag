@@ -54,14 +54,6 @@ add_filter( 'loop_shop_per_page', function ( $cols ) {
     return 36;
 }, 20 );
 
-// needed for the "Poor Guy's Swiss Knife" plugin to have a reference to the wc_ajax_url value
-add_filter( 'wc_cart_fragments_params', function( $params ) {
-    if( false === $params ) {
-        $params = array( 'wc_ajax_url' => '/' );
-    }
-    return $params;
-}, 20 );
-
 /*-----------------------------------------------------------------------------------*/
 /* Don't add any code below here or the sky will fall down */
 /*-----------------------------------------------------------------------------------*/
